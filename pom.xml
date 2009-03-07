@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.kohsuke</groupId>
+  <artifactId>ajaxterm</artifactId>
+  <packaging>pom</packaging>
+  <name>Ajaxterm for Java</name>
+  <version>1.0-SNAPSHOT</version>
+  <url>https://ajaxterm4j.dev.java.net/</url>
+  <developers>
+    <developer>
+      <id>kohsuke</id>
+      <name>Kohsuke Kawaguchi</name>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>The MIT license</name>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:svn:https://ajaxterm4j.dev.java.net/svn/ajaxterm4j/trunk/ajaxterm4j</connection>
+    <developerConnection>scm:svn:https://ajaxterm4j.dev.java.net/svn/ajaxterm4j/trunk/ajaxterm4j</developerConnection>
+    <url>https://ajaxterm4j.dev.java.net/source/browse/ajaxterm4j</url>
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <modules>
+    <module>ajaxterm</module>
+    <module>webapp</module>
+  </modules>
+  
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>java.net-m2-repository</id>
+      <!--url>svn:https://svn.dev.java.net/svn/maven2-repository/trunk/www/repository/</url-->
+      <url>java-net:/maven2-repository/trunk/www/repository/</url>
+    </repository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+</project>
