@@ -4,6 +4,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 
 /**
+ * C library interface.
+ * 
  * @author Kohsuke Kawaguchi
  */
 public interface CLibrary extends Library {

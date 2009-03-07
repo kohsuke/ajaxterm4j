@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface Esc {
+@interface Esc {
     String[] value();
 }

@@ -5,6 +5,8 @@ import static org.kohsuke.ajaxterm.UtilLibrary.LIBUTIL;
 import static org.kohsuke.ajaxterm.CLibrary.*;
 import static org.kohsuke.ajaxterm.CLibrary.FD_CLOEXEC;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.FileDescriptor;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -19,6 +21,9 @@ import java.lang.reflect.Field;
  * @author Kohsuke Kawaguchi
  */
 public final class Session extends Thread {
+    /**
+     * PID of the child process.
+     */
     public final int pid;
     public final Terminal terminal;
     /**
@@ -28,7 +33,19 @@ public final class Session extends Thread {
     private final Reader in;
     public final Writer out;
 
-    public Session(int width, int height) throws Exception {
+    /**
+     *
+     * @param width
+     *      Width of the terminal. For example, 80.
+     * @param height
+     *      Height of the terminal. For example, 25.
+     * @param commands
+     *      Command line arguments of the process to launch.
+     *      {"/bin/bash","--login"} for example.
+     */
+    public Session(int width, int height, String... commands) throws Exception {
+        if(commands.length==0)
+            throw new IllegalArgumentException("No command line arguments");
         this.terminal = new Terminal(width,height);
 
         // make execv call to force classloading
@@ -45,7 +62,7 @@ public final class Session extends Thread {
             }
 
             LIBC.setenv("TERM","linux",1);
-            LIBC.execv("/bin/bash",new String[]{"/bin/bash","--login"});
+            LIBC.execv(commands[0],commands);
         }
 
         FileDescriptor fd = new FileDescriptor();
@@ -79,5 +96,21 @@ public final class Session extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleUpdate(HttpServletRequest req, HttpServletResponse rsp) throws IOException, InterruptedException {
+        String k = req.getParameter("k");
+        if(k!=null) {
+            out.write(k);
+            out.flush();
+        }
+        Thread.sleep(20);
+
+        rsp.setContentType("application/xml");
+        if(terminal.showCursor) {
+            rsp.addHeader("Cursor-X",String.valueOf(terminal.getCx()));
+            rsp.addHeader("Cursor-Y",String.valueOf(terminal.getCy()));
+        }
+        rsp.getWriter().println(terminal.dumpHtml(req.getParameter("c")!=null));
     }
 }
