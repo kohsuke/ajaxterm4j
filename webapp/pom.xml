@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.kohsuke.ajaxterm</groupId>
   <artifactId>ajaxterm-webapp</artifactId>
-  <packaging>stapler-war</packaging>
+  <packaging>war</packaging>
   <name>Demo webapp of Ajaxterm</name>
 
   <dependencies>
@@ -20,7 +20,13 @@
     <dependency>
       <groupId>org.kohsuke.stapler</groupId>
       <artifactId>stapler</artifactId>
-      <version>1.96</version>
+      <version>1.200</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -38,7 +44,7 @@
       <plugin>
         <groupId>org.kohsuke.stapler</groupId>
         <artifactId>maven-stapler-plugin</artifactId>
-        <version>1.11</version>
+        <version>1.16</version>
         <extensions>true</extensions>
       </plugin>
     </plugins>
