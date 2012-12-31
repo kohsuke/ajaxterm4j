@@ -242,8 +242,8 @@ public class Terminal {
                 if(i!=0)    r.append("</span>");
                 int bg,fg;
                 if(color) {
-                    bg = q/256;
-                    fg = q%256;
+                    bg = q/16;
+                    fg = q%16;
                 } else {
                     bg = 1;
                     fg = 7;
