@@ -195,6 +195,8 @@ public class Terminal {
     }
 
     public void write(String s) {
+        if (LOGGER.isLoggable(Level.FINEST))
+            LOGGER.finest("Received: "+s);
         for( int i=0; i<s.length(); i++ ) {
             char ch = s.charAt(i);
             if(buf.length()>0 || ESCAPE_SEQUENCES.containsKey(""+ch)) {
