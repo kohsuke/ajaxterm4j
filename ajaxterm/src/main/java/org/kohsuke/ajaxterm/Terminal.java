@@ -22,6 +22,13 @@ public class Terminal {
     /**
      * This is typed as 'char' but it's not character that's stored.
      * The lower 8 bit is the character code, and upper 8 bit are back/fore color.
+     *
+     * 0xFBCC
+     *   ^^~~ <- ASCII char code
+     *   ||
+     *   |+-- background color code (0:black, 1:blue, 2:red, 4:green, ....)
+     *   |
+     *   +--- foreground color code
      */
     public char[] scr;
     /**
@@ -41,6 +48,11 @@ public class Terminal {
      */
     private int cx_bak,cy_bak;
     private boolean cl;
+    /**
+     * Set graphics rendition. This is the value that gets stored into the higher 8 bits of {@link #scr}
+     *
+     * @see #csi_m(int[])
+     */
     private int sgr;
     private String buf; // TODO: switch to StringBuilder
     private String outbuf,last_html;
@@ -161,7 +173,7 @@ public class Terminal {
         if(buf.length()>32) {
             // error
             if(LOGGER.isLoggable(Level.FINE))
-                LOGGER.fine("Unhandled escapse sequence: "+buf.replaceAll("\u001B","<ESC>"));
+                LOGGER.fine("Unhandled escape sequence: "+buf.replaceAll("\u001B","<ESC>"));
             buf = "";
             return;
         }
@@ -264,16 +276,25 @@ public class Terminal {
         outbuf = "\u001B[?6c";
     }
 
+    /**
+     * Backspace.
+     */
     @Esc("\u0008")
     public void esc_0x08() {
         cx = max(0,cx-1);
     }
 
+    /**
+     * Tab.
+     */
     @Esc("\u0009")
     public void esc_0x09() {
         cx = (((cx/8)+1)*8)%width;
     }
 
+    /**
+     * Carriage return
+     */
     @Esc("\r")
     public void esc_0x0d() {
         cl=false;
