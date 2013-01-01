@@ -70,6 +70,9 @@ public final class Session extends Thread {
         // make execv call to force classloading
         // once we fork, the child process cannot load more classes reliably.
         LIBC.execv("-",new String[]{"-","-"});
+        for( int i=LIBC.getdtablesize()-1; i>0; i-- ) {
+            LIBC.fcntl(1,F_GETFD,0);
+        }
 
         IntByReference pty = new IntByReference();
         pid = LIBUTIL.forkpty(pty, null, null, null);
