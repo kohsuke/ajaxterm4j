@@ -114,7 +114,7 @@ public final class Session extends Thread {
     public void handleUpdate(HttpServletRequest req, HttpServletResponse rsp) throws IOException, InterruptedException {
         lastAccess = System.currentTimeMillis();
         String k = req.getParameter("k");
-        if(k!=null) {
+        if(k!=null && k.length()!=0) {
             out.write(k);
             out.flush();
         }
