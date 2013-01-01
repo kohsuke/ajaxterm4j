@@ -274,7 +274,7 @@ public class Terminal {
      */
     public ScreenImage dumpHtml(boolean color, int clientTimestamp) {
         if (timestamp==clientTimestamp) // our screen hasn't changed
-            return new ScreenImage(clientTimestamp, NO_CHANGE);
+            return new ScreenImage(clientTimestamp, NO_CHANGE, this);
 
         StringBuilder r = new StringBuilder(cx*cy*2);
         r.append("<pre class='term ");
@@ -319,11 +319,11 @@ public class Terminal {
 
         String str = r.toString();
         if(str.equals(last_html) && last_html_timestamp==clientTimestamp) {
-            return new ScreenImage(clientTimestamp,NO_CHANGE);
+            return new ScreenImage(clientTimestamp,NO_CHANGE,this);
         } else {
             last_html = str;
             last_html_timestamp = timestamp;
-            return new ScreenImage(timestamp,str);
+            return new ScreenImage(timestamp,str,this);
         }
     }
 

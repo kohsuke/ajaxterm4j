@@ -170,7 +170,7 @@ public final class Session extends Thread {
 
     private boolean hasChildProcessFinished() {
         IntByReference status = new IntByReference();
-        boolean b = LIBC.waitpid(pid, status, LIBC.WNOHANG) > 0;
+        boolean b = LIBC.waitpid(pid, status, WNOHANG) > 0;
         if (b) {
             int x = status.getValue();
             if ((x&0x7F)!=0)    exitCode=128+(x&0x7F);
@@ -191,27 +191,32 @@ public final class Session extends Thread {
      * Receives the call from the client-side JavaScript.
      */
     public void handleUpdate(HttpServletRequest req, HttpServletResponse rsp) throws IOException, InterruptedException {
+        handleUpdate(
+                req.getParameter("k"),
+                req.getParameter("c") != null,
+                Integer.parseInt(req.getParameter("t"))).renderResponse(rsp);
+    }
+
+    /**
+     * Receives the call from the client-side JavaScript.
+     */
+    public ScreenImage handleUpdate(String keys, boolean color, int clientTimestamp) throws IOException, InterruptedException {
         lastAccess = System.currentTimeMillis();
-        String k = req.getParameter("k");
+        write(keys);
+        Thread.sleep(20);   // give a bit of time to let the app respond. poor version of Nagel's algorithm
+
+        terminal.setCssClass(isAlive() ? "":"dead");
+        return terminal.dumpHtml(color,clientTimestamp);
+    }
+
+    /**
+     * Write to the child process.
+     */
+    public void write(String k) throws IOException {
         if(k!=null && k.length()!=0) {
             out.write(k);
             out.flush();
         }
-        Thread.sleep(20);   // give a bit of time to let the app respond
-
-        rsp.setContentType("application/xml;charset=UTF-8");
-        if(terminal.showCursor) {
-            rsp.addHeader("Cursor-X",String.valueOf(terminal.getCx()));
-            rsp.addHeader("Cursor-Y",String.valueOf(terminal.getCy()));
-            rsp.addHeader("Screen-X",String.valueOf(terminal.width));
-            rsp.addHeader("Screen-Y",String.valueOf(terminal.height));
-        }
-        terminal.setCssClass(isAlive() ? "":"dead");
-        ScreenImage screen = terminal.dumpHtml(
-                req.getParameter("c") != null,
-                Integer.parseInt(req.getParameter("t")));
-        rsp.addHeader("Screen-Timestamp",String.valueOf(screen.timestamp));
-        rsp.getWriter().println(screen.screen);
     }
 
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
