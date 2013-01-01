@@ -178,7 +178,11 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 		}
 	}
 	function keypress(ev) {
-		if (!ev) var ev=window.event;
+        return handleKey(ev,ev.which)
+    }
+    // which==0 appears to be used as a signel but not sure exactly why --- Kohsuke
+    function handleKey(ev,which) {
+		if (!ev) ev=window.event;
 //		s="kp keyCode="+ev.keyCode+" which="+ev.which+" shiftKey="+ev.shiftKey+" ctrlKey="+ev.ctrlKey+" altKey="+ev.altKey;
 //		debug(s);
 //		return false;
@@ -187,8 +191,8 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 		var k="";
 		if (ev.keyCode)
 			kc=ev.keyCode;
-		if (ev.which)
-			kc=ev.which;
+		if (which)
+			kc=which;
 		if (ev.altKey) {
 			if (kc>=65 && kc<=90)
 				kc+=32;
@@ -205,7 +209,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 			else if (kc==221) k=String.fromCharCode(29); // Ctrl-]
 			else if (kc==219) k=String.fromCharCode(29); // Ctrl-]
 			else if (kc==219) k=String.fromCharCode(0);  // Ctrl-@
-		} else if (ev.which==0) {
+		} else if (which==0) {
 			if (kc==9) k=String.fromCharCode(9);  // Tab
 			else if (kc==8) k=String.fromCharCode(127);  // Backspace
 			else if (kc==27) k=String.fromCharCode(27); // Escape
@@ -281,8 +285,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 //			s="kd keyCode="+ev.keyCode+" which="+ev.which+" shiftKey="+ev.shiftKey+" ctrlKey="+ev.ctrlKey+" altKey="+ev.altKey;
 //			debug(s);
         if (o[ev.keyCode] || ev.ctrlKey || ev.altKey) {
-            ev.which=0;
-            return keypress(ev);
+            return handleKey(ev,0);
         }
 	}
 	function init() {
