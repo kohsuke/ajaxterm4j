@@ -177,9 +177,41 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 			timeout=window.setTimeout(update,1);
 		}
 	}
+    // special keys that don't result in the keypress event.
+    // we need to handle these in keydown
+    var keyDownKeyCodes = {
+        // see http://www.w3.org/TR/DOM-Level-3-Events/#determine-keydown-keyup-keyCode
+        // also see http://www.javascripter.net/faq/keycodes.htm
+        8:1, // Backspace
+        9:1, // TAB
+        27:1,   // Escape
+        33:1,   // PageUp
+        34:1,   // PageDown
+        35:1,   // End
+        36:1,   // Home
+        37:1,   // Left
+        38:1,   // Up
+        39:1,   // Right
+        40:1,   // Down
+        45:1,   // Insert
+        46:1,   // Del
+        112:1, 113:1, 114:1, 115:1, 116:1, 117:1, 118:1, 119:1, 120:1, 121:1, 122:1, 123:1 // F1-F12
+    };
+	function keydown(ev) {
+		if (!ev) ev=window.event;
+        if ((keyDownKeyCodes[ev.keyCode] && ev.charCode==0) || ev.ctrlKey || ev.altKey) {
+            // ev.charCode!=0 implies those are keys that produce ASCII codes
+            return handleKey(ev,0);
+        }
+	}
 	function keypress(ev) {
-        return handleKey(ev,ev.which)
+        if ((keyDownKeyCodes[ev.keyCode] && ev.charCode==0) || ev.ctrlKey || ev.altKey) {
+            // we handled these in keydown
+        } else {
+            return handleKey(ev,ev.which)
+        }
     }
+
     // which==0 appears to be used as a signel but not sure exactly why --- Kohsuke
     function handleKey(ev,which) {
 		if (!ev) ev=window.event;
@@ -258,35 +290,6 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 		if (ev.stopPropagation) ev.stopPropagation();
 		if (ev.preventDefault)  ev.preventDefault();
 		return false;
-	}
-    // special keys that don't result in the keypress event.
-    // we need to handle these in keydown
-    var o={
-        // see http://www.w3.org/TR/DOM-Level-3-Events/#determine-keydown-keyup-keyCode
-        // also see http://www.javascripter.net/faq/keycodes.htm
-        8:1, // Backspace
-        9:1, // TAB
-        27:1,   // Escape
-        33:1,   // PageUp
-        34:1,   // PageDown
-        35:1,   // End
-        36:1,   // Home
-        37:1,   // Left
-        38:1,   // Up
-        39:1,   // Right
-        40:1,   // Down
-        45:1,   // Insert
-        46:1,   // Del
-        112:1, 113:1, 114:1, 115:1, 116:1, 117:1, 118:1, 119:1, 120:1, 121:1, 122:1, 123:1 // F1-F12
-    };
-	function keydown(ev) {
-		if (!ev) ev=window.event;
-
-//			s="kd keyCode="+ev.keyCode+" which="+ev.which+" shiftKey="+ev.shiftKey+" ctrlKey="+ev.ctrlKey+" altKey="+ev.altKey;
-//			debug(s);
-        if (o[ev.keyCode] || ev.ctrlKey || ev.altKey) {
-            return handleKey(ev,0);
-        }
 	}
 	function init() {
 		sled.appendChild(document.createTextNode('\xb7'));
