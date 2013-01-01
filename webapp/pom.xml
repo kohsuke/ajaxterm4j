@@ -14,7 +14,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ajaxterm4j-stapler</artifactId>
+      <artifactId>ajaxterm4j</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

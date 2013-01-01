@@ -39,7 +39,6 @@
 
   <modules>
     <module>ajaxterm</module>
-    <module>ajaxterm-stapler</module>
     <module>webapp</module>
   </modules>
 
