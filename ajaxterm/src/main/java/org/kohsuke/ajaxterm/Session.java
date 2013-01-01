@@ -48,7 +48,7 @@ public final class Session extends Thread {
      *      Command line arguments of the process to launch.
      *      {"/bin/bash","--login"} for example.
      */
-    public Session(int width, int height, String... commands) throws Exception {
+    public Session(int width, int height, String... commands) {
         this(width,height,new PtyProcessBuilder().commands(commands).screen(width,height).fork());
     }
 
@@ -64,7 +64,7 @@ public final class Session extends Thread {
      *
      * @see PtyProcessBuilder
      */
-    public Session(int width, int height, Process childProcessWithTty) throws Exception {
+    public Session(int width, int height, Process childProcessWithTty) {
         this.terminal = new Terminal(width,height);
         this.childProcess = childProcessWithTty;
 
