@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<project name="${project.name}">
+  <bannerLeft>
+    <name>${project.name}</name>
+    <href>http://${project.artifactId}.kohsuke.org/</href>
+  </bannerLeft>
+  <skin>
+    <groupId>org.kohsuke</groupId>
+    <artifactId>maven-skin</artifactId>
+    <version>1.2</version>
+  </skin>
+
+  <body>
+    <menu name="${project.name}">
+      <item name="Introduction" href="index.html" />
+      <item name="Download" href="http://mvnrepository.com/artifact/${project.groupId}/${project.artifactId}"/>
+      <item name="Javadoc" href="apidocs/" />
+    </menu>
+    <menu name="Project Info">
+      <item name="Issue tracker" href="https://github.com/kohsuke/${project.artifactId}/issues" />
+      <item name="Source code" href="https://github.com/kohsuke/${project.artifactId}"/>
+    </menu>
+  </body>
+</project>
