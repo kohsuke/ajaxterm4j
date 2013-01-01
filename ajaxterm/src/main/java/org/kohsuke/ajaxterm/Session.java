@@ -30,6 +30,12 @@ public final class Session extends Thread {
      * When was this session allocated?
      */
     public final long time = System.currentTimeMillis();
+
+    /**
+     * When was this session accessed the last time?
+     */
+    private long lastAccess;
+
     private final Reader in;
     public final Writer out;
 
@@ -75,6 +81,13 @@ public final class Session extends Thread {
         start(); // start pumping
     }
 
+    /**
+     * When was this session accessed by the client the last time?
+     */
+    public long getLastAccess() {
+        return lastAccess;
+    }
+
     public void kill() throws IOException {
         in.close();
         out.close();
@@ -99,6 +112,7 @@ public final class Session extends Thread {
     }
 
     public void handleUpdate(HttpServletRequest req, HttpServletResponse rsp) throws IOException, InterruptedException {
+        lastAccess = System.currentTimeMillis();
         String k = req.getParameter("k");
         if(k!=null) {
             out.write(k);
