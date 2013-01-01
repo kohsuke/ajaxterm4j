@@ -20,8 +20,10 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 	var opt_color=document.createElement('a');
 	var opt_paste=document.createElement('a');
 	var sdebug=document.createElement('span');
-	var dterm=document.createElement('div');
-    var cursor=document.createElement('div');
+    var spacer=document.createElement('div');   // creates border & padding around the main screen
+    var screen = document.createElement('div'); // holds dterm&cursor. origin of the cursor positioning
+	var dterm=document.createElement('div');    // area that shows the screen
+    var cursor=document.createElement('div');   // cursor
 
 	function debug(s) {
 		sdebug.innerHTML=s;
@@ -138,10 +140,12 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
                         if(cxs!=null) {
                             var cx = new Number(cxs);
                             var cy = new Number(r.getResponseHeader("Cursor-Y"));
+                            var sx = new Number(r.getResponseHeader("Screen-X"));
+                            var sy = new Number(r.getResponseHeader("Screen-Y"));
+
                             var t=dterm.firstChild;
-                            // this '4' is probably the border width, but I don't know how to compute that
-                            cursor.style.left=(sled.offsetWidth*cx)+(t!=null?t.offsetLeft:0)+4+"px";
-                            cursor.style.top=(sled.offsetHeight*cy)+(t!=null?t.offsetTop:0)+"px";
+                            cursor.style.left=(dterm.offsetWidth*cx/sx)+"px";
+                            cursor.style.top=(dterm.offsetHeight*cy/sy)+"px";
                             cursor.style.display="";
                         } else {
                             cursor.style.display="none";
@@ -272,8 +276,12 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 		opt_add(opt_paste,'Paste');
 		dstat.appendChild(sdebug);
 		dstat.className='stat';
-		div.appendChild(dstat);
-		div.appendChild(dterm);
+        div.appendChild(dstat);
+        div.appendChild(spacer);
+        spacer.className='spacer';
+        spacer.appendChild(screen);
+        screen.className='screen';
+        screen.appendChild(dterm);
 		if(opt_color.addEventListener) {
 			opt_get.addEventListener('click',do_get,true);
 			opt_color.addEventListener('click',do_color,true);
@@ -291,7 +299,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
         cursor.style.color="white";
         cursor.style.zIndex="999";
         cursor.innerHTML="_";
-        div.appendChild(cursor);
+        screen.appendChild(cursor);
 	}
 	init();
 }

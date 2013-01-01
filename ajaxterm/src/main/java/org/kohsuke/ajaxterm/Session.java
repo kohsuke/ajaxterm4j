@@ -110,6 +110,8 @@ public final class Session extends Thread {
         if(terminal.showCursor) {
             rsp.addHeader("Cursor-X",String.valueOf(terminal.getCx()));
             rsp.addHeader("Cursor-Y",String.valueOf(terminal.getCy()));
+            rsp.addHeader("Screen-X",String.valueOf(terminal.width));
+            rsp.addHeader("Screen-Y",String.valueOf(terminal.height));
         }
         rsp.getWriter().println(terminal.dumpHtml(req.getParameter("c")!=null));
     }

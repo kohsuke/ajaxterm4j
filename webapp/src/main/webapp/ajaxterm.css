@@ -25,13 +25,20 @@ pre.stat .off {
 }
 pre.term {
 	margin: 0px;
-	padding: 4px;
+	padding: 0px;
 	display: block;
-	font-family: monospace;
 	white-space: pre;
 	background-color: black;
-	border-top: 1px solid white;
 	color: #eee;
+}
+div.spacer {
+    padding: 4px;
+    background-color: black;
+    border-top: 1px solid white;
+}
+div.screen {
+    position: relative; /* acts as an anchor of cursor, which is absolutely positioned. */
+    font-family: monospace;
 }
 pre.term span.f0  { color: #000; }
 pre.term span.f1  { color: #b00; }
@@ -57,6 +64,7 @@ pre.term span.b4  { background-color: #00b; }
 pre.term span.b5  { background-color: #b0b; }
 pre.term span.b6  { background-color: #0bb; }
 pre.term span.b7  { background-color: #bbb; }
+/*pre.term span.cur { text-decoration: underline; }*/
 
 body { background-color: #888; }
 #term {
