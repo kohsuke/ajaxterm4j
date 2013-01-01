@@ -77,10 +77,19 @@ public class Terminal {
      */
     public boolean showCursor;
 
+    private String cssClass;
+
     public Terminal(int width, int height) {
         this.width = width;
         this.height = height;
         reset();
+    }
+
+    /**
+     * Sets additional CSS classes for the terminal element.
+     */
+    public void setCssClass(String cssClass) {
+        this.cssClass = cssClass;
     }
 
     public int getCx() {
@@ -267,7 +276,11 @@ public class Terminal {
         if (timestamp==clientTimestamp) // our screen hasn't changed
             return new ScreenImage(clientTimestamp, NO_CHANGE);
 
-        StringBuilder r = new StringBuilder("<?xml version='1.0' encoding='iso-8859-1'?><pre class='term'>");
+        StringBuilder r = new StringBuilder(cx*cy*2);
+        r.append("<pre class='term ");
+        if (cssClass!=null)
+            r.append(cssClass);
+        r.append("'>");
 
         int currentStatus = -1;
 

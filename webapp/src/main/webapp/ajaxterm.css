@@ -31,7 +31,7 @@
     background-color: black;
     border-top: 1px solid white;
 }
-.ajaxterm div.spacer div.screen {/* */
+.ajaxterm div.spacer div.screen {
     position: relative; /* acts as an anchor of cursor, which is absolutely positioned. */
     font-family: monospace;
 }
@@ -41,6 +41,9 @@
 	display: block;
 	white-space: pre;
 	color: #eee;
+}
+.ajaxterm div.spacer div.screen pre.term.dead {/* the session has finished */
+    opacity: 0.5;
 }
 
 /* color output */

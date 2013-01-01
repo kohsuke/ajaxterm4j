@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a session.
@@ -100,14 +102,14 @@ public final class Session extends Thread {
         int len;
 
         try {
-            while((len= in.read(buf))>=0) {
+            while((len=in.read(buf))>=0) {
                 terminal.write(new String(buf,0,len));
                 String reply = terminal.read();
                 if(reply!=null)
                     out.write(reply);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Session pump thread is dead", e);
         }
     }
 
@@ -130,10 +132,13 @@ public final class Session extends Thread {
             rsp.addHeader("Screen-X",String.valueOf(terminal.width));
             rsp.addHeader("Screen-Y",String.valueOf(terminal.height));
         }
+        terminal.setCssClass(isAlive() ? "":"dead");
         ScreenImage screen = terminal.dumpHtml(
                 req.getParameter("c") != null,
                 Integer.parseInt(req.getParameter("t")));
         rsp.addHeader("Screen-Timestamp",String.valueOf(screen.timestamp));
         rsp.getWriter().println(screen.screen);
     }
+
+    private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
 }
