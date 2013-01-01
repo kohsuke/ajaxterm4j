@@ -1,10 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<title>Ajaxterm</title>
+	<title>Ajaxterm4j</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" type="text/css" href="ajaxterm.css"/>
-	<script type="text/javascript" src="ajaxterm.js"></script>
+
+	<!-- this line is a Stapler-speak for including ajaxterm.css and ajaxterm.js -->
+	<% adjunct 'org.kohsuke.ajaxterm' %>
 </head>
 <body style="background-color:#888">
     <div id="term" class="ajaxterm"></div>
