@@ -1,5 +1,5 @@
 ajaxterm={};
-ajaxterm.Terminal_ctor=function(id,width,height) {
+ajaxterm.Terminal=function(id,width,height) {
 	var ie=0;
 	if(window.ActiveXObject)
 		ie=1;
@@ -14,7 +14,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 	var sending=0;
 	var rmax=1;
 
-	var div=document.getElementById(id);
+	var div=(typeof(id)=="string" ? document.getElementById(id) : id);
     var fitter=document.createElement('div');   // for shrinking the screen area to the right size
 	var dstat=document.createElement('pre');
 	var sled=document.createElement('span');    // status LED. indicate the communication with the server
@@ -323,8 +323,4 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
         screen.appendChild(cursor);
 	}
 	init();
-}
-ajaxterm.Terminal=function(id,width,height) {
-	return new this.Terminal_ctor(id,width,height);
-}
-
+};
