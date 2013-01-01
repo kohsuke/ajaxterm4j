@@ -18,7 +18,6 @@ public class AjaxTerm {
     }
 
     public void doU(StaplerRequest req, StaplerResponse rsp,
-                    @QueryParameter String s,
                     @QueryParameter int w,
                     @QueryParameter int h) throws Exception {
         if(session==null)

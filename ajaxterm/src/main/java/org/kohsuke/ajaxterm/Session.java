@@ -111,6 +111,9 @@ public final class Session extends Thread {
         }
     }
 
+    /**
+     * Receives the call from the client-side JavaScript.
+     */
     public void handleUpdate(HttpServletRequest req, HttpServletResponse rsp) throws IOException, InterruptedException {
         lastAccess = System.currentTimeMillis();
         String k = req.getParameter("k");
@@ -118,9 +121,9 @@ public final class Session extends Thread {
             out.write(k);
             out.flush();
         }
-        Thread.sleep(20);
+        Thread.sleep(20);   // give a bit of time to let the app respond
 
-        rsp.setContentType("application/xml");
+        rsp.setContentType("application/xml;charset=UTF-8");
         if(terminal.showCursor) {
             rsp.addHeader("Cursor-X",String.valueOf(terminal.getCx()));
             rsp.addHeader("Cursor-Y",String.valueOf(terminal.getCy()));

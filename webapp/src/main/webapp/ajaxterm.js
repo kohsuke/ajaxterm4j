@@ -1,5 +1,11 @@
 ajaxterm={};
-ajaxterm.Terminal=function(id,width,height) {
+ajaxterm.Terminal=function(id,options) {
+    // options
+    var width  = options.width || 80; // dimension of the terminal
+    var height = options.height || 25;
+    var endpoint = options.endpoint;  // URL of the server endpoint that delivers the request to Session.handleUpdate
+
+
 	var ie=0;
 	if(window.ActiveXObject)
 		ie=1;
@@ -108,12 +114,12 @@ ajaxterm.Terminal=function(id,width,height) {
 			}
 			var query=query1+send+"&t="+screenTimestamp;
 			if(opt_get.className=='on') {
-				r.open("GET","u?"+query,true);
+				r.open("GET",endpoint+"?"+query,true);
 				if(ie) {
 					r.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
 				}
 			} else {
-				r.open("POST","u",true);
+				r.open("POST",endpoint,true);
 			}
 			r.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 			r.onreadystatechange = function () {

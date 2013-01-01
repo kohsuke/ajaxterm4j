@@ -10,7 +10,7 @@
     <div id="term" class="ajaxterm"></div>
     <script type="text/javascript">
         window.onload=function() {
-            t=ajaxterm.Terminal("term",80,25);
+            t=new ajaxterm.Terminal("term",{width:80,height:25,endpoint:"./u"});
         };
    	</script>
 </body>

@@ -10,6 +10,22 @@ implemented in C and use X for rendering, ajaxterm4j is implemented in Java and 
 Usage
 ---
 
+Ajaxterm4j is defined in a JavaScript file and CSS. Include those in your page:
+
+	<link rel="stylesheet" type="text/css" href="ajaxterm.css"/>
+	<script type="text/javascript" src="ajaxterm.js"></script>
+
+Ajaxterm4j creates a terminal inside a DIV element with the 'ajaxterm' as the CSS class name:
+
+    <div id="myTestTerminal" class="ajaxterm"></div>
+
+Finally, instantiate a terminal. The first parameter is the ID or the element of the DIV element.
+The second argument is an option hash:
+
+    new ajaxterm.Terminal("myTestTerminal",{width:80,height:25,endpoint:""});
+
+
+
 Refer to the javadoc of the `Session` class. Depending on the web framework of your choice, how you intergrate this with your webapp will be different.
 
 Also see the demo webapp application.
