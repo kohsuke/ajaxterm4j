@@ -255,18 +255,35 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 		if (ev.preventDefault)  ev.preventDefault();
 		return false;
 	}
+    // special keys that don't result in the keypress event.
+    // we need to handle these in keydown
+    var o={
+        // see http://www.w3.org/TR/DOM-Level-3-Events/#determine-keydown-keyup-keyCode
+        // also see http://www.javascripter.net/faq/keycodes.htm
+        8:1, // Backspace
+        9:1, // TAB
+        27:1,   // Escape
+        33:1,   // PageUp
+        34:1,   // PageDown
+        35:1,   // End
+        36:1,   // Home
+        37:1,   // Left
+        38:1,   // Up
+        39:1,   // Right
+        40:1,   // Down
+        45:1,   // Insert
+        46:1,   // Del
+        112:1, 113:1, 114:1, 115:1, 116:1, 117:1, 118:1, 119:1, 120:1, 121:1, 122:1, 123:1 // F1-F12
+    };
 	function keydown(ev) {
-		if (!ev) var ev=window.event;
-		if (ie) {
+		if (!ev) ev=window.event;
+
 //			s="kd keyCode="+ev.keyCode+" which="+ev.which+" shiftKey="+ev.shiftKey+" ctrlKey="+ev.ctrlKey+" altKey="+ev.altKey;
 //			debug(s);
-			o={9:1,8:1,27:1,33:1,34:1,35:1,36:1,37:1,38:1,39:1,40:1,45:1,46:1,112:1,
-			113:1,114:1,115:1,116:1,117:1,118:1,119:1,120:1,121:1,122:1,123:1};
-			if (o[ev.keyCode] || ev.ctrlKey || ev.altKey) {
-				ev.which=0;
-				return keypress(ev);
-			}
-		}
+        if (o[ev.keyCode] || ev.ctrlKey || ev.altKey) {
+            ev.which=0;
+            return keypress(ev);
+        }
 	}
 	function init() {
 		sled.appendChild(document.createTextNode('\xb7'));
@@ -296,8 +313,8 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 			opt_color.attachEvent("onclick", do_color);
 			opt_paste.attachEvent("onclick", do_paste);
 		}
-		document.onkeypress=keypress;
-		document.onkeydown=keydown;
+		window.onkeypress=keypress;
+        window.onkeydown=keydown;
 		timeout=window.setTimeout(update,100);
 
         cursor.style.position="absolute";
