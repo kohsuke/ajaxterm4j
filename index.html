@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+<html>
+  <head>
+    <title>Ajaxterm for Java - </title>
+    <style type="text/css" media="all">
+      @import url("./css/maven-base.css");
+      @import url("./css/maven-theme.css");
+      @import url("./css/1024px.css");
+      @import url("./css/site.css");
+    </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      </head>
+  <body>
+    <div id="wrap2"><div id="wrap">
+    <div id="header">
+      <p id="toplinks">Skip to: <a href="#content">Content</a> | <a href="#sidebar">Navigation</a> | <a href="#footer">Footer</a></p>
+		
+            <h1 id="bannerLeft">
+          <a href="http://ajaxterm4j.kohsuke.org/">
+    
+            Ajaxterm for Java
+    
+            </a>
+        </h1>
+                
+      <p id="slogan">Ajaxterm for Java</p>
+    </div>
+    <div id="breadcrumbs">
+      <div class="xright">  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+
+    <div id="sidebar">
+      <div id="navcolumn">
+              <h2>
+          Ajaxterm for Java
+        </h2><ul>
+              
+    <li class="none">
+              <strong>Introduction</strong>
+        </li>
+              
+    <li class="none">
+              <a href="http://mvnrepository.com/artifact/org.kohsuke/ajaxterm4j">Download</a>
+        </li>
+              
+    <li class="none">
+              <a href="apidocs/">Javadoc</a>
+        </li>
+          </ul>
+      <h2>
+          Project Info
+        </h2><ul>
+              
+    <li class="none">
+              <a href="https://github.com/kohsuke/ajaxterm4j/issues">Issue tracker</a>
+        </li>
+              
+    <li class="none">
+              <a href="https://github.com/kohsuke/ajaxterm4j">Source code</a>
+        </li>
+          </ul>
+        </div>
+    </div>
+    <div id="content">
+      <div id="contentBox">
+        <h1>What is Ajaxterm4j?</h1>
+
+<p>Ajaxterm4j is a Java port of <a href="http://antony.lesuisse.org/software/ajaxterm/">Ajaxterm</a>, which lets us emulate a terminal on a web browser.</p>
+
+<p>Ajaxterm4j consists of JavaScript that renders the terminal on the client, <code>XmlHttpRequest</code> that sends keystrokes and screens back and forth,
+and a Java library that launches/manages processes. The library plays a similar role to xterm, except that whereas xterm is
+implemented in C and use X for rendering, ajaxterm4j is implemented in Java and uses Ajax/HTML for rendering.</p>
+
+<p>Usage
+<hr /></p>
+
+<p>Ajaxterm4j is defined in a JavaScript file and CSS. Include those in your page:</p>
+
+<pre><code>&lt;link rel="stylesheet" type="text/css" href="ajaxterm.css"/&gt;
+&lt;script type="text/javascript" src="ajaxterm.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Ajaxterm4j creates a terminal inside a DIV element with the 'ajaxterm' as the CSS class name:</p>
+
+<pre><code>&lt;div id="myTestTerminal" class="ajaxterm"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>Finally, instantiate a terminal. The first parameter is the ID or the element of the DIV element.
+The second argument is an option hash:</p>
+
+<pre><code>new ajaxterm.Terminal("myTestTerminal",{width:80,height:25,endpoint:"path/to/somewhere"});
+</code></pre>
+
+<p>Glueing together the server-side is up to you.
+Depending on the web framework of your choice, how you intergrate this with your webapp will be different.
+Basically,</p>
+
+<ol>
+<li>For each terminal session, a <code>Session</code> instance needs to be created.
+(multiple clients can connect to the same <code>Session</code> instance to create screencast-like effect.)</li>
+<li>The URL specified in the <code>endpoint</code> parameter needs to call into <code>Session.handleUpdate</code></li>
+</ol>
+
+<p>Refer to the javadoc of the <code>Session</code> class for more details.</p>
+
+<p>Demo application
+<hr />
+The source tree contains a demo application that you can run with <code>mvn install; cd webapp; mvn jetty:run</code></p>
+
+      </div>
+    </div>
+    <div id="footer">
+      <div class="xright">&#169;  
+          2012
+    
+          <a href="http://kohsuke.org/">Kohsuke Kawaguchi</a> and other contributors
+          
+  
+
+  
+  
+  &nbsp;| Last Published: 12/31/2012
+  &nbsp;| Version: 1.0
+</div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    </div></div>
+  </body>
+</html>
