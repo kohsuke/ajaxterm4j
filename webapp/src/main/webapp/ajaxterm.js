@@ -4,7 +4,7 @@ ajaxterm.Terminal=function(id,options) {
     var width  = options.width || 80; // dimension of the terminal
     var height = options.height || 25;
     var endpoint = options.endpoint;  // URL of the server endpoint that delivers the request to Session.handleUpdate
-
+    var additionalQueryString = options.query; // additional parameters sent to the server
 
 	var ie=0;
 	if(window.ActiveXObject)
@@ -113,6 +113,7 @@ ajaxterm.Terminal=function(id,options) {
 				send+=keybuf.pop();
 			}
 			var query=query1+send+"&t="+screenTimestamp;
+            if (additionalQueryString)  query+='&'+additionalQueryString;
 			if(opt_get.className=='on') {
 				r.open("GET",endpoint+"?"+query,true);
 				if(ie) {

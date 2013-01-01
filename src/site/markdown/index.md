@@ -22,10 +22,18 @@ Ajaxterm4j creates a terminal inside a DIV element with the 'ajaxterm' as the CS
 Finally, instantiate a terminal. The first parameter is the ID or the element of the DIV element.
 The second argument is an option hash:
 
-    new ajaxterm.Terminal("myTestTerminal",{width:80,height:25,endpoint:""});
+    new ajaxterm.Terminal("myTestTerminal",{width:80,height:25,endpoint:"path/to/somewhere"});
 
+Glueing together the server-side is up to you.
+Depending on the web framework of your choice, how you intergrate this with your webapp will be different.
+Basically,
 
+1. For each terminal session, a `Session` instance needs to be created.
+   (multiple clients can connect to the same `Session` instance to create screencast-like effect.)
+1. The URL specified in the `endpoint` parameter needs to call into `Session.handleUpdate`
 
-Refer to the javadoc of the `Session` class. Depending on the web framework of your choice, how you intergrate this with your webapp will be different.
+Refer to the javadoc of the `Session` class for more details.
 
-Also see the demo webapp application.
+Demo application
+---
+The source tree contains a demo application that you can run with `mvn install; cd webapp; mvn jetty:run`
