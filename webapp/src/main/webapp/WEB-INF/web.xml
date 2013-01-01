@@ -5,7 +5,7 @@
   <display-name>Archetype Created Web Application</display-name>
 
   <listener>
-    <listener-class>org.kohsuke.ajaxterm.WebAppMain</listener-class>
+    <listener-class>org.kohsuke.ajaxterm.demo.WebAppMain</listener-class>
   </listener>
 
   <servlet>

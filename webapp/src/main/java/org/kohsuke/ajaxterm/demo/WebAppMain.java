@@ -1,4 +1,4 @@
-package org.kohsuke.ajaxterm;
+package org.kohsuke.ajaxterm.demo;
 
 import org.kohsuke.stapler.Stapler;
 

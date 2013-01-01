@@ -1,5 +1,6 @@
-package org.kohsuke.ajaxterm;
+package org.kohsuke.ajaxterm.demo;
 
+import org.kohsuke.ajaxterm.Session;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.QueryParameter;
