@@ -9,7 +9,7 @@
   <artifactId>ajaxterm4j</artifactId>
   <packaging>pom</packaging>
   <name>Ajaxterm for Java</name>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <url>http://ajaxterm4j.koshuke.org/</url>
   <developers>
     <developer>
