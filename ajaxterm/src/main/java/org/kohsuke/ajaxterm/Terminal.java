@@ -371,21 +371,25 @@ public class Terminal {
     }
 
     public void csi_A(int[] i) {
-        cy = max(st,cy-i[0]);
+        cy = max(st,cy-defaultsTo(i,1));
     }
 
     public void csi_B(int[] i) {
-        cy = min(sb,cy+i[0]);
+        cy = min(sb,cy+defaultsTo(i,1));
     }
 
     public void csi_C(int[] i) {
-        cx = min(width-1,cx+i[0]);
+        cx = min(width-1,cx+defaultsTo(i,1));
         cl = false;
     }
 
     public void csi_D(int[] i) {
-        cx = max(0,cx-i[0]);
+        cx = max(0,cx-defaultsTo(i,1));
         cl = false;
+    }
+
+    private int defaultsTo(int[] args, int defaultValue) {
+        return (args.length==0) ? defaultValue : args[0];
     }
 
     public void csi_E(int[] i) {
@@ -412,7 +416,7 @@ public class Terminal {
     }
 
     public void csi_J(int[] i) {
-        switch (i[0]) {
+        switch (defaultsTo(i,0)) {
         case 0: zero(cy,cx,height-1,width-1);return;
         case 1: zero(0,0,cx,cy);return;
         case 2: zero(0,0,height-1,width-1);return;
@@ -420,7 +424,7 @@ public class Terminal {
     }
 
     public void csi_K(int... i) {
-        switch (i[0]) {
+        switch (defaultsTo(i,0)) {
         case 0: zero(cy,cx,cy,width-1);return;
         case 1: zero(cy,0,cy,cx);return;
         case 2: zero(cy,0,cy,width-1);return;
@@ -585,6 +589,8 @@ public class Terminal {
                     CsiSequence seq = CSI_SEQUENCE.get(m.group(2).charAt(0));
                     if(seq!=null) {
                         String[] tokens = s.split(";");
+                        if (s.length()==0)
+                            tokens = EMPTY_STRING_ARRAY;
                         int[] n = new int[tokens.length];
                         for (int i = 0; i < n.length; i++)
                             try {
@@ -635,4 +641,5 @@ public class Terminal {
     private static final Logger LOGGER = Logger.getLogger(Terminal.class.getName());
 
     private static final String NO_CHANGE = "<idem/>";
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 }
