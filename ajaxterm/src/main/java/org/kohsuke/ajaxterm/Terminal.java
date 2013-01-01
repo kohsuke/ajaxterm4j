@@ -231,26 +231,35 @@ public class Terminal {
         return buf.toString();
     }
 
+    private int pack(int fg, int bg, boolean cursor) {
+        return (cursor?1<<8:0)+(fg<<4)+(bg);
+    }
+
     public String dumpHtml(boolean color) {
         StringBuilder r = new StringBuilder("<?xml version='1.0' encoding='iso-8859-1'?><pre class='term'>");
 
-        int currentColor = -1;
+        int currentStatus = -1;
 
         int total = height * width;
         for( int i=0; i< total; i++) {
             int q = scr[i]/256;
-            if(currentColor!=q) {// color has changed
-                currentColor = q;
+
+            int bg,fg;
+            if(color) {
+                bg = q/16;
+                fg = q%16;
+            } else {
+                bg = 1;
+                fg = 7;
+            }
+            boolean cursor = $(cy,cx)==i;
+            int p = pack(fg,bg,cursor);
+            if(currentStatus!=p) {// rendering status has changed
+                currentStatus = p;
                 if(i!=0)    r.append("</span>");
-                int bg,fg;
-                if(color) {
-                    bg = q/16;
-                    fg = q%16;
-                } else {
-                    bg = 1;
-                    fg = 7;
-                }
-                r.append("<span class='f").append(fg).append(" b").append(bg).append("'>");
+                r.append("<span class='f").append(fg).append(" b").append(bg);
+                if (cursor) r.append(" cur");
+                r.append("'>");
             }
 
             int c = scr[i]%256;
