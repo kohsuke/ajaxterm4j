@@ -14,9 +14,10 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 	var rmax=1;
 
 	var div=document.getElementById(id);
+    var fitter=document.createElement('div');   // for shrinking the screen area to the right size
 	var dstat=document.createElement('pre');
-	var sled=document.createElement('span');
-	var opt_get=document.createElement('a');
+	var sled=document.createElement('span');    // status LED. indicate the communication with the server
+	var opt_get=document.createElement('a');    //
 	var opt_color=document.createElement('a');
 	var opt_paste=document.createElement('a');
 	var sdebug=document.createElement('span');
@@ -276,8 +277,10 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 		opt_add(opt_paste,'Paste');
 		dstat.appendChild(sdebug);
 		dstat.className='stat';
-        div.appendChild(dstat);
-        div.appendChild(spacer);
+        div.appendChild(fitter);
+        fitter.className = 'fitter';
+        fitter.appendChild(dstat);
+        fitter.appendChild(spacer);
         spacer.className='spacer';
         spacer.appendChild(screen);
         screen.className='screen';

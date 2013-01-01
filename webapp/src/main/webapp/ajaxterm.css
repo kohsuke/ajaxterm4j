@@ -1,4 +1,7 @@
-pre.stat {
+.ajaxterm .fitter {
+    display: inline-block;
+}
+.ajaxterm pre.stat {/* status indicator line */
 	margin: 0px;
 	padding: 4px;
 	display: block;
@@ -8,65 +11,61 @@ pre.stat {
 	border-top: 1px solid black;
 	color: white;
 }
-pre.stat span {
+.ajaxterm pre.stat span {/* buttons inside the status line */
 	padding: 0px;
 }
-pre.stat .on {
+.ajaxterm pre.stat span.on {/* button on state */
 	background-color: #080;
 	font-weight: bold;
 	color: white;
 	cursor: pointer;
 }
-pre.stat .off {
+.ajaxterm pre.stat span.off {/* button off state */
 	background-color: #888;
 	font-weight: bold;
 	color: white;
 	cursor: pointer;
 }
-pre.term {
-	margin: 0px;
-	padding: 0px;
-	display: block;
-	white-space: pre;
-	background-color: black;
-	color: #eee;
-}
-div.spacer {
+.ajaxterm div.spacer {/* sibling to pre.stat, holds all the screen. this one can have margin & border. */
     padding: 4px;
     background-color: black;
     border-top: 1px solid white;
 }
-div.screen {
+.ajaxterm div.spacer div.screen {/* */
     position: relative; /* acts as an anchor of cursor, which is absolutely positioned. */
     font-family: monospace;
 }
-pre.term span.f0  { color: #000; }
-pre.term span.f1  { color: #b00; }
-pre.term span.f2  { color: #0b0; }
-pre.term span.f3  { color: #bb0; }
-pre.term span.f4  { color: #00b; }
-pre.term span.f5  { color: #b0b; }
-pre.term span.f6  { color: #0bb; }
-pre.term span.f7  { color: #bbb; }
-pre.term span.f8  { color: #666; }
-pre.term span.f9  { color: #f00; font-weight: bold; }
-pre.term span.f10 { color: #0f0; font-weight: bold; }
-pre.term span.f11 { color: #ff0; font-weight: bold; }
-pre.term span.f12 { color: #00f; font-weight: bold; }
-pre.term span.f13 { color: #f0f; font-weight: bold; }
-pre.term span.f14 { color: #0ff; font-weight: bold; }
-pre.term span.f15 { color: #fff; font-weight: bold; }
-pre.term span.b0  { background-color: #000; }
-pre.term span.b1  { background-color: #b00; }
-pre.term span.b2  { background-color: #0b0; }
-pre.term span.b3  { background-color: #bb0; }
-pre.term span.b4  { background-color: #00b; }
-pre.term span.b5  { background-color: #b0b; }
-pre.term span.b6  { background-color: #0bb; }
-pre.term span.b7  { background-color: #bbb; }
-/*pre.term span.cur { text-decoration: underline; }*/
-
-body { background-color: #888; }
-#term {
-	float: left;
+.ajaxterm div.spacer div.screen pre.term {/* this is what the server sends us */
+	margin: 0px;
+	padding: 0px;
+	display: block;
+	white-space: pre;
+	color: #eee;
 }
+
+/* color output */
+.ajaxterm span.f0  { color: #000; }
+.ajaxterm span.f1  { color: #b00; }
+.ajaxterm span.f2  { color: #0b0; }
+.ajaxterm span.f3  { color: #bb0; }
+.ajaxterm span.f4  { color: #00b; }
+.ajaxterm span.f5  { color: #b0b; }
+.ajaxterm span.f6  { color: #0bb; }
+.ajaxterm span.f7  { color: #bbb; }
+.ajaxterm span.f8  { color: #666; }
+.ajaxterm span.f9  { color: #f00; font-weight: bold; }
+.ajaxterm span.f10 { color: #0f0; font-weight: bold; }
+.ajaxterm span.f11 { color: #ff0; font-weight: bold; }
+.ajaxterm span.f12 { color: #00f; font-weight: bold; }
+.ajaxterm span.f13 { color: #f0f; font-weight: bold; }
+.ajaxterm span.f14 { color: #0ff; font-weight: bold; }
+.ajaxterm span.f15 { color: #fff; font-weight: bold; }
+.ajaxterm span.b0  { background-color: #000; }
+.ajaxterm span.b1  { background-color: #b00; }
+.ajaxterm span.b2  { background-color: #0b0; }
+.ajaxterm span.b3  { background-color: #bb0; }
+.ajaxterm span.b4  { background-color: #00b; }
+.ajaxterm span.b5  { background-color: #b0b; }
+.ajaxterm span.b6  { background-color: #0bb; }
+.ajaxterm span.b7  { background-color: #bbb; }
+/*pre.term span.cur { text-decoration: underline; }*/
