@@ -31,6 +31,13 @@
     <url>http://${project.artifactId}.kohsuke.org/</url>
   </scm>
 
+  <distributionManagement>
+    <site>
+      <id>github-pages</id>
+      <url>gitsite:git@github.com/kohsuke/${project.artifactId}.git</url>
+    </site>
+  </distributionManagement>
+
   <modules>
     <module>ajaxterm</module>
     <module>webapp</module>
