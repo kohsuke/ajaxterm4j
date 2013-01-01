@@ -121,15 +121,8 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 				if (r.readyState==4) {
 					if(r.status==200) {
 						window.clearTimeout(error_timeout);
-						de=r.responseXML.documentElement;
-						if(de.tagName=="pre") {
-							if(ie) {
-								Sarissa.updateContentFromNode(de, dterm);
-							} else {
-								Sarissa.updateContentFromNode(de, dterm);
-//								old=div.firstChild;
-//								div.replaceChild(de,old);
-							}
+						if(r.responseText!="<idem/>\n") {
+                            dterm.innerHTML = r.responseText;
 							rmax=100;
 						} else {
 							rmax*=2;
