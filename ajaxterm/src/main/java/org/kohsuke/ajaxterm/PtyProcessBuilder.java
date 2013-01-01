@@ -90,10 +90,11 @@ public class PtyProcessBuilder {
         String[] args  = commands.toArray(new String[commands.size()]);
         String pwd = this.pwd==null ? null : this.pwd.getAbsolutePath();
         this.environment.put("TERM","linux");
-        String[] envs = new String[environment.size()];
+        String[] envs = new String[environment.size()*2];
         int idx=0;
         for (Map.Entry<String,String> e :environment.entrySet()) {
-            envs[idx++] = e.getKey()+'='+e.getValue();
+            envs[idx++] = e.getKey();
+            envs[idx++] = e.getValue();
         }
 
 
@@ -109,7 +110,15 @@ public class PtyProcessBuilder {
             if (pwd!=null)
                 LIBC.chdir(pwd);
 
-            LIBC.execve(program,args,envs);
+            // environment variable overrides
+            for (int i=0; i<envs.length; i+=2) {
+                if (envs[i+1]==null)
+                    LIBC.unsetenv(envs[i]);
+                else
+                    LIBC.setenv(envs[i],envs[i+1],1);
+            }
+
+            LIBC.execv(program,args);
         }
 
         Memory struct = new Memory(8);  // 4 unsigned shorts
