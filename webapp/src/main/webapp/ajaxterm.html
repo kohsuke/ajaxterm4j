@@ -7,14 +7,13 @@
 	<script type="text/javascript" src="sarissa.js"></script>
 	<script type="text/javascript" src="sarissa_dhtml.js"></script>
 	<script type="text/javascript" src="ajaxterm.js"></script>
-	<script type="text/javascript">
-	window.onload=function() {
-		t=ajaxterm.Terminal("term",80,25);
-	};
-	</script>
 </head>
 <body style="background-color:#888">
-<!-- we need to make this div fit the content. display:inline-block or float would do -->
-<div id="term" class="ajaxterm"></div>
+    <div id="term" class="ajaxterm"></div>
+    <script type="text/javascript">
+        window.onload=function() {
+            t=ajaxterm.Terminal("term",80,25);
+        };
+   	</script>
 </body>
 </html>
