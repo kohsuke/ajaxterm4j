@@ -7,6 +7,7 @@ import static org.kohsuke.ajaxterm.CLibrary.FD_CLOEXEC;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.Closeable;
 import java.io.FileDescriptor;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,11 +15,17 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Represents a session.
+ *
+ * <p>
+ * A {@link Thread} is used to shuttle data back and force between the HTTP client
+ * and the process that was forked. You can check the liveness of this thread to see
+ * if the child process is still alive or not.
  *
  * @author Kohsuke Kawaguchi
  */
@@ -26,12 +33,16 @@ public final class Session extends Thread {
     /**
      * PID of the child process.
      */
-    public final int pid;
-    public final Terminal terminal;
+    private final int pid;
+
     /**
-     * When was this session allocated?
+     * Exit code of the process.
      */
-    public final long time = System.currentTimeMillis();
+    private int exitCode;
+
+    private final Terminal terminal;
+
+    private final long time = System.currentTimeMillis();
 
     /**
      * When was this session accessed the last time?
@@ -39,7 +50,7 @@ public final class Session extends Thread {
     private long lastAccess;
 
     private final Reader in;
-    public final Writer out;
+    private final Writer out;
 
     /**
      *
@@ -73,14 +84,24 @@ public final class Session extends Thread {
             LIBC.execv(commands[0],commands);
         }
 
+        /*
+        in = new FileReader(createFileDescriptor(pty.getValue()));
+        out = new FileWriter(createFileDescriptor(pty.getValue()));
+        */
+        FileDescriptor fileDescriptor = createFileDescriptor(pty.getValue());
+        in = new FileReader(fileDescriptor);
+        out = new FileWriter(fileDescriptor);
+
+        setName("Terminal pump thread for "+ Arrays.asList(commands));
+        start(); // start pumping
+    }
+
+    private FileDescriptor createFileDescriptor(int v) throws NoSuchFieldException, IllegalAccessException {
         FileDescriptor fd = new FileDescriptor();
         Field f = FileDescriptor.class.getDeclaredField("fd");
         f.setAccessible(true);
-        f.set(fd,pty.getValue());
-        in = new FileReader(fd);
-        out = new FileWriter(fd);
-
-        start(); // start pumping
+        f.set(fd,v);
+        return fd;
     }
 
     /**
@@ -90,6 +111,32 @@ public final class Session extends Thread {
         return lastAccess;
     }
 
+    /**
+     * PID of the forked child process.
+     */
+    public int getPID() {
+        return pid;
+    }
+
+    /**
+     * Exit code of the process, if the process has already terminated.
+     *
+     * If {@linkplain #isAlive() it's still running}, this method returns 0.
+     */
+    public int getExitCode() {
+        return exitCode;
+    }
+
+    /**
+     * When was this session allocated?
+     */
+    public long getTime() {
+        return time;
+    }
+
+    /**
+     * Kills the process.
+     */
     public void kill() throws IOException {
         in.close();
         out.close();
@@ -108,8 +155,32 @@ public final class Session extends Thread {
                 if(reply!=null)
                     out.write(reply);
             }
+            hasChildProcessFinished();
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Session pump thread is dead", e);
+            if (!hasChildProcessFinished())
+                LOGGER.log(Level.WARNING, "Session pump thread is dead", e);
+        } finally {
+            closeQuietly(in);
+            closeQuietly(out);
+        }
+    }
+
+    private boolean hasChildProcessFinished() {
+        IntByReference status = new IntByReference();
+        boolean b = LIBC.waitpid(pid, status, LIBC.WNOHANG) > 0;
+        if (b) {
+            int x = status.getValue();
+            if ((x&0x7F)!=0)    exitCode=128+(x&0x7F);
+            exitCode = (x>>8)&0xFF;
+        }
+        return b;
+    }
+
+    private void closeQuietly(Closeable c) {
+        try {
+            if (c!=null)    c.close();
+        } catch (IOException e) {
+            // silently ignore
         }
     }
 
