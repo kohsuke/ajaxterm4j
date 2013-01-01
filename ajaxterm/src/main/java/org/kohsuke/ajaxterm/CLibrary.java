@@ -1,6 +1,7 @@
 package org.kohsuke.ajaxterm;
 
 import com.sun.jna.Library;
+import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
@@ -20,6 +21,9 @@ public interface CLibrary extends Library {
     void kill(int pid, int signal);
     int fcntl(int fd, int cmd, int v);
     int getdtablesize();
+
+    int ioctl(int fd, int cmd, Memory arg);
+    int TIOCSWINSZ = 0x5414;    // taken from Linux, hopefully the same across the board
 
     int waitpid(int pid, IntByReference status, int options);
     int WNOHANG = 1;

@@ -1,5 +1,6 @@
 package org.kohsuke.ajaxterm;
 
+import com.sun.jna.Memory;
 import com.sun.jna.ptr.IntByReference;
 import static org.kohsuke.ajaxterm.UtilLibrary.LIBUTIL;
 import static org.kohsuke.ajaxterm.CLibrary.*;
@@ -94,6 +95,13 @@ public final class Session extends Thread {
         FileDescriptor fileDescriptor = createFileDescriptor(pty.getValue());
         in = new FileReader(fileDescriptor);
         out = new FileWriter(fileDescriptor);
+
+        Memory struct = new Memory(8);  // 4 unsigned shorts
+        struct.setShort(0,(short)height);
+        struct.setShort(2,(short)width);
+        struct.setInt(4,0);
+        if (LIBC.ioctl(pty.getValue(),TIOCSWINSZ,struct)!=0)
+            throw new IllegalStateException("Failed to ioctl(TIOCSWINSZ)");
 
         setName("Terminal pump thread for "+ Arrays.asList(commands));
         start(); // start pumping
