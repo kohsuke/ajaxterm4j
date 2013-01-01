@@ -55,7 +55,23 @@ public class Terminal {
      */
     private int sgr;
     private String buf; // TODO: switch to StringBuilder
-    private String outbuf,last_html;
+    private String outbuf;
+    /**
+     * The HTML that we returned from {@link #dumpHtml(boolean,int)} the last time.
+     */
+    private String last_html;
+    /**
+     * The value of {@link #timestamp} when we computed {@link #last_html}
+     */
+    private int last_html_timestamp;
+
+    /**
+     * Unique counter that increases as the screen changes.
+     *
+     * Don't start by 0 as that's the typical client's initial value.
+     */
+    private int timestamp = 1000;
+
     /**
      * True if the cursor should be displayed.
      */
@@ -87,6 +103,7 @@ public class Terminal {
         sgr = 0x700;
         showCursor = true;
         buf = outbuf = last_html = "";
+        timestamp += 1000;
     }
 
     private int $(int y, int x) {
@@ -118,7 +135,7 @@ public class Terminal {
     }
 
     public void zero(int y1, int y2) {
-        zero(y1,0,y2,width);
+        zero(y1, 0, y2, width);
     }
 
     /**
@@ -194,7 +211,11 @@ public class Terminal {
         }
     }
 
+    /**
+     * Receives the output from the forked process into the terminal.
+     */
     public void write(String s) {
+        timestamp++;
         if (LOGGER.isLoggable(Level.FINEST))
             LOGGER.finest("Received: "+s);
         for( int i=0; i<s.length(); i++ ) {
@@ -235,7 +256,17 @@ public class Terminal {
         return (cursor?1<<8:0)+(fg<<4)+(bg);
     }
 
-    public String dumpHtml(boolean color) {
+    /**
+     * @param color
+     *      If we want the color coded output. It'll make the response bit bigger.
+     * @param clientTimestamp
+     *      The value of {@link ScreenImage#timestamp} that the client currently has.
+     *      This information is used to avoid unnecessary screen refresh.
+     */
+    public ScreenImage dumpHtml(boolean color, int clientTimestamp) {
+        if (timestamp==clientTimestamp) // our screen hasn't changed
+            return new ScreenImage(clientTimestamp, NO_CHANGE);
+
         StringBuilder r = new StringBuilder("<?xml version='1.0' encoding='iso-8859-1'?><pre class='term'>");
 
         int currentStatus = -1;
@@ -274,11 +305,12 @@ public class Terminal {
         r.append("</span></pre>");
 
         String str = r.toString();
-        if(str.equals(last_html)) {
-            return "<idem />";
+        if(str.equals(last_html) && last_html_timestamp==clientTimestamp) {
+            return new ScreenImage(clientTimestamp,NO_CHANGE);
         } else {
             last_html = str;
-            return str;
+            last_html_timestamp = timestamp;
+            return new ScreenImage(timestamp,str);
         }
     }
 
@@ -601,4 +633,6 @@ public class Terminal {
     private static final char EMPTY_CH = '\u0700'; // back=0,fore=7,char=0
 
     private static final Logger LOGGER = Logger.getLogger(Terminal.class.getName());
+
+    private static final String NO_CHANGE = "<idem/>";
 }

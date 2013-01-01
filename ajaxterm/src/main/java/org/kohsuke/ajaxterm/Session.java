@@ -113,6 +113,10 @@ public final class Session extends Thread {
             rsp.addHeader("Screen-X",String.valueOf(terminal.width));
             rsp.addHeader("Screen-Y",String.valueOf(terminal.height));
         }
-        rsp.getWriter().println(terminal.dumpHtml(req.getParameter("c")!=null));
+        ScreenImage screen = terminal.dumpHtml(
+                req.getParameter("c") != null,
+                Integer.parseInt(req.getParameter("t")));
+        rsp.addHeader("Screen-Timestamp",String.valueOf(screen.timestamp));
+        rsp.getWriter().println(screen.screen);
     }
 }

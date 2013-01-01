@@ -8,6 +8,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 	var query1=query0+"&c=1&k=";
 	var buf="";
 	var timeout;
+    var screenTimestamp = 0;
 	var error_timeout;
 	var keybuf=[];
 	var sending=0;
@@ -105,7 +106,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 			while(keybuf.length>0) {
 				send+=keybuf.pop();
 			}
-			var query=query1+send;
+			var query=query1+send+"&t="+screenTimestamp;
 			if(opt_get.className=='on') {
 				r.open("GET","u?"+query,true);
 				if(ie) {
@@ -155,6 +156,7 @@ ajaxterm.Terminal_ctor=function(id,width,height) {
 						sending=0;
 						sled.className='off';
 						timeout=window.setTimeout(update,rmax);
+                        screenTimestamp = r.getResponseHeader("Screen-Timestamp");
 					} else {
 						debug("Connection error status:"+r.status);
 					}
