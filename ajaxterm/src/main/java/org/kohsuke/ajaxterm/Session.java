@@ -115,6 +115,10 @@ public final class Session extends Thread {
         return fd;
     }
 
+    public Terminal getTerminal() {
+        return terminal;
+    }
+
     /**
      * When was this session accessed by the client the last time?
      */

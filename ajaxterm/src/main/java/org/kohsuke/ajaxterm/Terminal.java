@@ -256,8 +256,12 @@ public class Terminal {
 
     public String dumpLatin1() {
         StringBuilder buf = new StringBuilder(scr.length);
-        for (char ch : scr)
+        int i=0;
+        for (char ch : scr) {
             buf.append(LATEN1_TABLE.charAt((ch&0xFF)));
+            if (++i%width==0)
+                buf.append('\n');
+        }
         return buf.toString();
     }
 
