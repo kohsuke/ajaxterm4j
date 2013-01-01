@@ -443,11 +443,14 @@ public class Terminal {
                 scrollUp(cy,sb);
     }
 
+    /**
+     * Delete n chars
+     */
     public void csi_P(int[] args) {
         int _cy=cy,_cx=cx;
         String end = peek(cy,cx,cy,width);
         csi_K(0);
-        poke(_cx,_cy,end.substring(args[0]));
+        poke(_cy,_cx,end.substring(defaultsTo(args,1)));
     }
 
     public void csi_X(int[] args) {
