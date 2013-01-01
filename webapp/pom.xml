@@ -14,13 +14,13 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ajaxterm4j</artifactId>
+      <artifactId>ajaxterm4j-stapler</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.kohsuke.stapler</groupId>
-      <artifactId>stapler</artifactId>
-      <version>1.200</version>
+      <artifactId>stapler-groovy</artifactId>
+      <version>[1.200,)</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

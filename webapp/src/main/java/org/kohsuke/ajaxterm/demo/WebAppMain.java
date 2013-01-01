@@ -10,7 +10,7 @@ import javax.servlet.ServletContextListener;
  */
 public class WebAppMain implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        Stapler.setRoot(servletContextEvent,new AjaxTerm());
+        Stapler.setRoot(servletContextEvent,new AjaxTerm(servletContextEvent.getServletContext()));
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {

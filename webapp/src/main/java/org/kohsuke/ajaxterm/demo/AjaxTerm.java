@@ -6,6 +6,9 @@ import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
+
+import javax.servlet.ServletContext;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -13,8 +16,10 @@ import org.kohsuke.stapler.StaplerRequest;
 public class AjaxTerm {
     Session session;
 
-    public HttpResponse doIndex() {
-        return HttpResponses.redirectTo("ajaxterm.html");
+    public final AdjunctManager adjuncts;
+
+    public AjaxTerm(ServletContext context) {
+        adjuncts = new AdjunctManager(context,getClass().getClassLoader(),"adjuncts");
     }
 
     public void doU(StaplerRequest req, StaplerResponse rsp,
