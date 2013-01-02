@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public final class Session extends Thread {
-    private final Process childProcess;
+    private final ProcessWithPty childProcess;
 
     private final Terminal terminal;
 
@@ -49,7 +49,7 @@ public final class Session extends Thread {
      *      {"/bin/bash","--login"} for example.
      */
     public Session(int width, int height, String... commands) throws IOException {
-        this(width,height,new PtyProcessBuilder().commands(commands).screen(width,height).forkWithHelper());
+        this(width, height, new PtyProcessBuilder().commands(commands).forkWithHelper());
     }
 
     /**
@@ -64,9 +64,10 @@ public final class Session extends Thread {
      *
      * @see PtyProcessBuilder
      */
-    public Session(int width, int height, Process childProcessWithTty) {
+    public Session(int width, int height, ProcessWithPty childProcessWithTty) throws IOException {
         this.terminal = new Terminal(width,height);
         this.childProcess = childProcessWithTty;
+        childProcess.setWindowSize(width,height);
 
         in = new InputStreamReader(childProcess.getInputStream());
         out = new OutputStreamWriter(childProcess.getOutputStream());

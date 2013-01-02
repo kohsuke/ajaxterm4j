@@ -3,6 +3,7 @@ package org.kohsuke.ajaxterm;
 import com.sun.jna.Memory;
 import com.sun.jna.ptr.IntByReference;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -21,7 +22,7 @@ import static org.kohsuke.ajaxterm.CLibrary.*;
 import static org.kohsuke.ajaxterm.UtilLibrary.LIBUTIL;
 
 /**
- * {@link ProcessBuilder} for launching a child process with pseudo-terminal.
+ * {@link ProcessBuilder} for launching {@linkplain ProcessWithPty a child process with pseudo-terminal}.
  *
  * <p>
  * A pseudo-terminal is a special kind of pipe, so when we launch a new child process
@@ -34,14 +35,7 @@ public class PtyProcessBuilder {
     private List<String> commands = new ArrayList<String>();
     private File pwd;
     private Map<String,String> environment = new HashMap<String, String>();
-    private int width, height;
 
-
-    public PtyProcessBuilder screen(int width, int height) {
-        this.width = width;
-        this.height = height;
-        return this;
-    }
 
     public PtyProcessBuilder commands(List<String> cmds) {
         this.commands.addAll(cmds);
@@ -75,7 +69,7 @@ public class PtyProcessBuilder {
         return this.environment;
     }
 
-    public Process forkWithHelper() throws IOException {
+    public ProcessWithPty forkWithHelper() throws IOException {
         File py = File.createTempFile("launch", "py");
         InputStream in = PtyProcessBuilder.class.getResourceAsStream("launch.py");
         copyToFile(in,py);
@@ -88,14 +82,85 @@ public class PtyProcessBuilder {
         pb.environment().put("TERM","linux");
         List<String> pyCmds = pb.command();
         pyCmds.add("python");
+        pyCmds.add("-u");
         pyCmds.add(py.getAbsolutePath());
-        pyCmds.add(String.valueOf(width));
-        pyCmds.add(String.valueOf(height));
         pyCmds.addAll(commands);
-        return pb.start();
+        final Process base = pb.start();
+        return new ProcessWithPty() {
+            final DataOutputStream out = new DataOutputStream(base.getOutputStream());
+            @Override
+            public void setWindowSize(int width, int height) throws IOException {
+                out.write(0x03);
+                out.writeShort(4);
+                out.writeShort(height);
+                out.writeShort(width);
+            }
+
+            @Override
+            public void kill(int signal) throws IOException {
+                out.write(0x02);
+                out.writeShort(2);
+                out.writeShort(signal);
+            }
+
+            @Override
+            public OutputStream getOutputStream() {
+                return new OutputStream() {
+                    @Override
+                    public void write(int b) throws IOException {
+                        write(new byte[]{(byte) b});
+                    }
+
+                    @Override
+                    public void write(byte[] b, int off, int len) throws IOException {
+                        while (len>0) {
+                            int chunk = (len&0x7FFF);
+                            out.write(0x01);
+                            out.writeShort(chunk);
+                            out.write(b,off,chunk);
+                            off+=chunk;
+                            len-=chunk;
+                        }
+                        flush();
+                    }
+
+                    @Override
+                    public void flush() throws IOException {
+                        out.flush();
+                    }
+
+                    // TODO: how do we handle close()?
+                };
+            }
+
+            @Override
+            public InputStream getInputStream() {
+                return base.getInputStream();
+            }
+
+            @Override
+            public InputStream getErrorStream() {
+                return base.getErrorStream();
+            }
+
+            @Override
+            public int waitFor() throws InterruptedException {
+                return base.waitFor();
+            }
+
+            @Override
+            public int exitValue() {
+                return base.exitValue();
+            }
+
+            @Override
+            public void destroy() {
+                base.destroy();
+            }
+        };
     }
 
-    public Process fork() {
+    public ProcessWithPty fork() {
         if(commands.size()==0)
             throw new IllegalArgumentException("No command line arguments");
 
@@ -119,7 +184,7 @@ public class PtyProcessBuilder {
         }
 
 
-        IntByReference pty = new IntByReference();
+        final IntByReference pty = new IntByReference();
         final int pid = LIBUTIL.forkpty(pty, null, null, null);
         if(pid==0) {
             // on child process
@@ -142,18 +207,11 @@ public class PtyProcessBuilder {
             LIBC.execv(program,args);
         }
 
-        Memory struct = new Memory(8);  // 4 unsigned shorts
-        struct.setShort(0,(short)height);
-        struct.setShort(2,(short)width);
-        struct.setInt(4,0);
-        if (LIBC.ioctl(pty.getValue(),TIOCSWINSZ,struct)!=0)
-            throw new IllegalStateException("Failed to ioctl(TIOCSWINSZ)");
-
         FileDescriptor fileDescriptor = createFileDescriptor(pty.getValue());
         final InputStream in = new FileInputStream(fileDescriptor);
         final OutputStream out = new FileOutputStream(fileDescriptor);
 
-        return new Process() {
+        return new ProcessWithPty() {
             private Integer exitCode;
 
             @Override
@@ -204,6 +262,22 @@ public class PtyProcessBuilder {
             public void destroy() {
                 if (exitCode==null)
                     LIBC.kill(pid,15/*SIGTERM*/);
+            }
+
+            @Override
+            public void setWindowSize(int width, int height) {
+                Memory struct = new Memory(8);  // 4 unsigned shorts
+                struct.setShort(0,(short)height);
+                struct.setShort(2,(short)width);
+                struct.setInt(4,0);
+                if (LIBC.ioctl(pty.getValue(),TIOCSWINSZ,struct)!=0)
+                    throw new IllegalStateException("Failed to ioctl(TIOCSWINSZ)");
+
+            }
+
+            @Override
+            public void kill(int signal) {
+                LIBC.kill(pid,signal);
             }
         };
     }
