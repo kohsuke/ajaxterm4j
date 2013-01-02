@@ -34,7 +34,7 @@ while True:
                         status = 128+(status&0xFF);
                     sys.exit(status)
                 else:
-                    pass
+                    raise
         else:
             # parent to child
             buf += os.read(0,1024)
