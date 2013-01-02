@@ -434,17 +434,17 @@ public class Terminal {
 
     public void csi_J(int[] i) {
         switch (defaultsTo(i,0)) {
-        case 0: zero(cy,cx,height-1,width-1);return;
+        case 0: zero(cy,cx,height,0);return;
         case 1: zero(0,0,cx,cy);return;
-        case 2: zero(0,0,height-1,width-1);return;
+        case 2: zero(0,0,height,0);return;
         }
     }
 
     public void csi_K(int... i) {
         switch (defaultsTo(i,0)) {
-        case 0: zero(cy,cx,cy,width-1);return;
+        case 0: zero(cy,cx,cy,width);return;
         case 1: zero(cy,0,cy,cx);return;
-        case 2: zero(cy,0,cy,width-1);return;
+        case 2: zero(cy,0,cy,width);return;
         }
     }
 
