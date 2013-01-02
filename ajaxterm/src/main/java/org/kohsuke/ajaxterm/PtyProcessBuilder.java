@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -61,7 +62,7 @@ public class PtyProcessBuilder {
     }
 
     public PtyProcessBuilder env(String name, String value) {
-        this.environment.put(name,value);
+        this.environment.put(name, value);
         return this;
     }
 
@@ -72,6 +73,26 @@ public class PtyProcessBuilder {
 
     public Map<String,String> envs() {
         return this.environment;
+    }
+
+    public Process forkWithHelper() throws IOException {
+        File py = File.createTempFile("launch", "py");
+        InputStream in = PtyProcessBuilder.class.getResourceAsStream("launch.py");
+        copyToFile(in,py);
+        py.deleteOnExit();
+        ProcessBuilder pb = new ProcessBuilder();
+        if (pwd!=null)
+            pb.directory(pwd);
+        pb.redirectErrorStream(true);
+        pb.environment().putAll(environment);
+        pb.environment().put("TERM","linux");
+        List<String> pyCmds = pb.command();
+        pyCmds.add("python");
+        pyCmds.add(py.getAbsolutePath());
+        pyCmds.add(String.valueOf(width));
+        pyCmds.add(String.valueOf(height));
+        pyCmds.addAll(commands);
+        return pb.start();
     }
 
     public Process fork() {
@@ -201,4 +222,16 @@ public class PtyProcessBuilder {
         }
     }
 
+    private void copyToFile(InputStream in, File out) throws IOException {
+        byte[] buf = new byte[1024];
+        OutputStream os = new FileOutputStream(out);
+        int len;
+
+        try {
+            while ((len=in.read(buf))>=0)
+                os.write(buf,0,len);
+        } finally {
+            os.close();
+        }
+    }
 }

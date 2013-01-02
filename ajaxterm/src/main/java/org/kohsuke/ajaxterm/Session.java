@@ -48,8 +48,8 @@ public final class Session extends Thread {
      *      Command line arguments of the process to launch.
      *      {"/bin/bash","--login"} for example.
      */
-    public Session(int width, int height, String... commands) {
-        this(width,height,new PtyProcessBuilder().commands(commands).screen(width,height).fork());
+    public Session(int width, int height, String... commands) throws IOException {
+        this(width,height,new PtyProcessBuilder().commands(commands).screen(width,height).forkWithHelper());
     }
 
     /**
