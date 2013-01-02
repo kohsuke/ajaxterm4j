@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author Kohsuke Kawaguchi
  */
 public abstract class ProcessWithPty extends Process {
-    /*package*/ ProcessWithPty() {
+    protected ProcessWithPty() {
     }
 
     public abstract void setWindowSize(int width, int height) throws IOException;
