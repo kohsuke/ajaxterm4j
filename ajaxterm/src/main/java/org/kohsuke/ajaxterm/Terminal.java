@@ -511,6 +511,11 @@ public class Terminal {
     }
 
     public void csi_m(int[] args) {
+        if (args.length==0) {
+            sgr = 0x0700;
+            return;
+        }
+
         for( int n : args ) {
             if(n==0 || n==39 || n==49 || n==27)
                 sgr =  0x0700;
