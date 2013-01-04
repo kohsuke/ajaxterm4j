@@ -93,6 +93,7 @@ public class PtyProcessBuilder {
                 out.writeShort(4);
                 out.writeShort(height);
                 out.writeShort(width);
+                out.flush();
             }
 
             @Override
@@ -100,6 +101,7 @@ public class PtyProcessBuilder {
                 out.write(0x02);
                 out.writeShort(2);
                 out.writeShort(signal);
+                out.flush();
             }
 
             @Override
