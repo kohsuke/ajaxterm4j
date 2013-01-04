@@ -26,7 +26,7 @@ public class AjaxTerm {
                     @QueryParameter int w,
                     @QueryParameter int h) throws Exception {
         if(session==null)
-            session = new Session(w,h,"/bin/bash","--login");
+            session = new Session(w,h,Session.getAjaxTerm(),"/bin/bash","--login");
         session.handleUpdate(req,rsp);
     }
 }

@@ -79,7 +79,6 @@ public class PtyProcessBuilder {
             pb.directory(pwd);
         pb.redirectErrorStream(true);
         pb.environment().putAll(environment);
-        pb.environment().put("TERM","linux");
         List<String> pyCmds = pb.command();
         pyCmds.add("python");
         pyCmds.add("-u");
@@ -175,7 +174,6 @@ public class PtyProcessBuilder {
         String program = commands.get(0);
         String[] args  = commands.toArray(new String[commands.size()]);
         String pwd = this.pwd==null ? null : this.pwd.getAbsolutePath();
-        this.environment.put("TERM","linux");
         String[] envs = new String[environment.size()*2];
         int idx=0;
         for (Map.Entry<String,String> e :environment.entrySet()) {

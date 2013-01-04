@@ -44,12 +44,15 @@ public final class Session extends Thread {
      *      Width of the terminal. For example, 80.
      * @param height
      *      Height of the terminal. For example, 25.
+     * @param terminal
+     *      Terminal name set to the TERM environment variable.
+     *      For the JavaScript terminal implemented in ajaxterm.js, specify the value taken from {@link #getAjaxTerm()}
      * @param commands
      *      Command line arguments of the process to launch.
      *      {"/bin/bash","--login"} for example.
      */
-    public Session(int width, int height, String... commands) throws IOException {
-        this(width, height, new PtyProcessBuilder().commands(commands).forkWithHelper());
+    public Session(int width, int height, String terminal, String... commands) throws IOException {
+        this(width, height, new PtyProcessBuilder().commands(commands).env("TERM",terminal).forkWithHelper());
     }
 
     /**
@@ -61,6 +64,7 @@ public final class Session extends Thread {
      * @param childProcessWithTty
      *      A child process forked with pty as its stdin/stdout.
      *      Normally this needs to be created with {@link PtyProcessBuilder}.
+     *      Make sure to set the correct terminal name in its environment variable.
      *
      * @see PtyProcessBuilder
      */
@@ -169,6 +173,14 @@ public final class Session extends Thread {
         return childProcess;
     }
 
+    /**
+     * Name of the terminal ajaxterm.js is implmenting.
+     *
+     * A static method instead of a constant to avoid compile-time bake-in to the client code.
+     */
+    public static String getAjaxTerm() {
+        return "linux";
+    }
 
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
 }

@@ -13,7 +13,7 @@ import static org.junit.matchers.JUnitMatchers.*;
 public class SessionTest {
     @Test
     public void basics() throws Exception {
-        Session s = new Session(80,25,"/bin/bash","-i");
+        Session s = new Session(80,25,Session.getAjaxTerm(),"/bin/bash","-i");
         assertThat(s.isAlive(), is(true));
         s.write("echo hello world\n");
         Thread.sleep(5000);

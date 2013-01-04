@@ -38,7 +38,7 @@ while True:
         else:
             # parent to child
             buf += os.read(0,1024)
-            print "Got %d\n"%len(buf)
+            debug("Got %d\n"%len(buf))
             while len(buf)>=3:
                 # it takes at least 3 bytes for the header
                 cmd,l=struct.unpack("!BH",buf[0:3])
@@ -63,4 +63,3 @@ while True:
                         fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack("HHHH",h,w,0,0))
                     else:
                         sys.stderr.write("Unknown command: %d\n"%cmd)
-            print "Looping through"
