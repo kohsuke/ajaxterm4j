@@ -245,7 +245,11 @@ public class PtyProcessBuilder {
                     waitpid(0);
                 }
                 return exitCode;
+            }
 
+            @Override
+            public boolean isAlive() {
+                return exitCode==null;
             }
 
             private void waitpid(int options) {

@@ -14,4 +14,16 @@ public abstract class ProcessWithPty extends Process {
     public abstract void setWindowSize(int width, int height) throws IOException;
 
     public abstract void kill(int signal) throws IOException;
+
+    /**
+     * Is this process still alive?
+     */
+    public boolean isAlive() {
+        try {
+            exitValue();
+            return true;
+        } catch (IllegalThreadStateException e) {
+            return false;
+        }
+    }
 }
