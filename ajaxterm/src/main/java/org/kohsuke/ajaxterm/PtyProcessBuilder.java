@@ -70,8 +70,8 @@ public class PtyProcessBuilder {
     }
 
     public ProcessWithPty forkWithHelper() throws IOException {
-        File py = File.createTempFile("launch", "py");
-        InputStream in = PtyProcessBuilder.class.getResourceAsStream("launch.py");
+        File py = File.createTempFile("ttycontrol", "py");
+        InputStream in = PtyProcessBuilder.class.getResourceAsStream("ttycontrol.py");
         copyToFile(in,py);
         py.deleteOnExit();
         ProcessBuilder pb = new ProcessBuilder();
