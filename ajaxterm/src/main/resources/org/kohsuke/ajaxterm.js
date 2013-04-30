@@ -128,7 +128,7 @@ ajaxterm.Terminal=function(id,options) {
 				if (r.readyState==4) {
 					if(r.status==200) {
 						window.clearTimeout(error_timeout);
-						if(r.responseText!="<idem/>\n") {
+						if(r.responseText.trim()!="<idem/>") {
                             dterm.innerHTML = r.responseText;
 							rmax=100;
 						} else {
