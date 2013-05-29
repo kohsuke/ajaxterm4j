@@ -58,12 +58,30 @@ ajaxterm.Terminal=function(id,options) {
 			query1=query0+"&k=";
 		debug('Color '+opt_color.className);
 	}
-	function mozilla_clipboard() {
-		 // mozilla sucks
+	function is_clipboard_support() {
+		if (window.clipboardData) {
+			return true;
+		} else if(window.netscape) {
+			if (is_mozilla_clipboard_support() == '') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+	function is_mozilla_clipboard_support(){
 		try {
 			netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
 		} catch (err) {
-			debug('Access denied, <a href="http://kb.mozillazine.org/Granting_JavaScript_access_to_the_clipboard" target="_blank">more info</a>');
+			return err + '\nAccess denied, <a href="http://kb.mozillazine.org/Granting_JavaScript_access_to_the_clipboard" target="_blank">more info</a>';
+		}
+		return '';
+	}
+	function mozilla_clipboard() {
+		 // mozilla sucks
+		if ((err=is_mozilla_clipboard_support()) != '') {
+			debug(err);
 			return undefined;
 		}
 		var clip = Components.classes["@mozilla.org/widget/clipboard;1"].createInstance(Components.interfaces.nsIClipboard);
@@ -299,7 +317,9 @@ ajaxterm.Terminal=function(id,options) {
 		opt_add(opt_color,'Colors');
 		opt_color.className='on';
 		opt_add(opt_get,'GET');
-		opt_add(opt_paste,'Paste');
+		if (is_clipboard_support()) {
+			opt_add(opt_paste,'Paste');
+		}
 		dstat.appendChild(sdebug);
 		dstat.className='stat';
         div.appendChild(fitter);
@@ -313,11 +333,15 @@ ajaxterm.Terminal=function(id,options) {
 		if(opt_color.addEventListener) {
 			opt_get.addEventListener('click',do_get,true);
 			opt_color.addEventListener('click',do_color,true);
-			opt_paste.addEventListener('click',do_paste,true);
+			if (is_clipboard_support()) {
+				opt_paste.addEventListener('click',do_paste,true);
+			}
 		} else {
 			opt_get.attachEvent("onclick", do_get);
 			opt_color.attachEvent("onclick", do_color);
-			opt_paste.attachEvent("onclick", do_paste);
+			if (is_clipboard_support()) {
+				opt_paste.attachEvent("onclick", do_paste);
+			}
 		}
 		window.onkeypress=keypress;
         window.onkeydown=keydown;
