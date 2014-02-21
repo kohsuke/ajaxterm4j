@@ -39,6 +39,10 @@ while True:
             # parent to child
             buf += os.read(0,1024)
             debug("Got %d\n"%len(buf))
+            if len(buf)==0:
+                # parent process terminated
+                os.kill(pid,15)
+                sys.exit(0)
             while len(buf)>=3:
                 # it takes at least 3 bytes for the header
                 cmd,l=struct.unpack("!BH",buf[0:3])
