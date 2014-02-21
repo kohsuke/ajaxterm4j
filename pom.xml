@@ -41,6 +41,7 @@
 
   <modules>
     <module>ajaxterm</module>
+    <module>trilead-ssh</module>
     <module>webapp</module>
   </modules>
 
