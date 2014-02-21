@@ -30,6 +30,7 @@
   </dependencies>
 
   <build>
+    <defaultGoal>jetty:run</defaultGoal>
     <finalName>ajaxterm-webapp</finalName>
     <plugins>
       <plugin>
