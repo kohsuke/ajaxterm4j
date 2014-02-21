@@ -18,7 +18,7 @@
     <dependency>
       <groupId>org.jenkins-ci</groupId>
       <artifactId>trilead-ssh2</artifactId>
-      <version>build217-jenkins-4-SNAPSHOT</version>
+      <version>build217-jenkins-4</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
