@@ -9,7 +9,7 @@
   <artifactId>ajaxterm4j</artifactId>
   <packaging>pom</packaging>
   <name>Ajaxterm for Java</name>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.4</version>
   <url>http://${project.artifactId}.koshuke.org/</url>
   <description>Terminal emulator in browser &amp; Java</description>
 
