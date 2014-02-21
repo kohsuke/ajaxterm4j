@@ -84,8 +84,7 @@
 and a Java library that launches/manages processes. The library plays a similar role to xterm, except that whereas xterm is
 implemented in C and use X for rendering, ajaxterm4j is implemented in Java and uses Ajax/HTML for rendering.</p>
 
-<p>Usage
-<hr /></p>
+<h2>Usage</h2>
 
 <p>Ajaxterm4j is defined in a JavaScript file and CSS. Include those in your page:</p>
 
@@ -116,15 +115,23 @@ Basically,</p>
 
 <p>Refer to the javadoc of the <code>Session</code> class for more details.</p>
 
-<p>Demo application
-<hr />
-The source tree contains a demo application that you can run with <code>mvn install; cd webapp; mvn jetty:run</code></p>
+<h2>Demo application</h2>
+
+<p>The source tree contains a demo application that you can run with <code>mvn install; cd webapp; mvn jetty:run</code></p>
+
+<h2>SSH connector</h2>
+
+<p>This project comes with a module that uses <code>trilead-ssh</code> library to act as a SSH client and terminal.
+In this model, browser and the webapp acts as a terminal and a pure-Java SSH client, and it speaks
+the SSH protocol with a remote SSH server.</p>
+
+<p>See demo application for the details.</p>
 
       </div>
     </div>
     <div id="footer">
       <div class="xright">&#169;  
-          2013
+          2014
     
           <a href="http://kohsuke.org/">Kohsuke Kawaguchi</a> and other contributors
           
@@ -132,8 +139,8 @@ The source tree contains a demo application that you can run with <code>mvn inst
 
   
   
-  &nbsp;| Last Published: 04/30/2013
-  &nbsp;| Version: 1.3
+  &nbsp;| Last Published: 02/21/2014
+  &nbsp;| Version: 1.4
 </div>
       <div class="clear">
         <hr/>
