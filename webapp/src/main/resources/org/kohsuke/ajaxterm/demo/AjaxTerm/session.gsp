@@ -14,5 +14,8 @@
             t=new ajaxterm.Terminal("term",{width:80,height:25,endpoint:"./u"});
         };
    	</script>
+  <form method="post" action="destroy">
+    <input type=submit value="Destory Session">
+  </form>
 </body>
 </html>

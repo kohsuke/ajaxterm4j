@@ -49,7 +49,7 @@ public class AjaxTerm {
     public HttpResponse doLocal(
                     @QueryParameter int w,
                     @QueryParameter int h) throws Exception {
-        destroy();
+        doDestroy();
         session = new Session(w,h,Session.getAjaxTerm(),"/bin/bash","--login");
 
         return HttpResponses.redirectToDot();
@@ -62,6 +62,7 @@ public class AjaxTerm {
                                 @QueryParameter int w,
                                 @QueryParameter int h) throws Exception {
         Connection con = new Connection(host, port);
+        con.connect();
         if (!con.authenticateWithPassword(user,password))
             con.authenticateWithKeyboardInteractive(user,new InteractiveCallback() {
                 public String[] replyToChallenge(String name, String instruction, int numPrompts, String[] prompt, boolean[] echo) throws Exception {
@@ -75,7 +76,7 @@ public class AjaxTerm {
         s.requestPTY(Session.getAjaxTerm(), w,h,0,0,null);
         s.startShell();
 
-        destroy();
+        doDestroy();
         session = new Session(w,h,new SshProcessWithPty(s));
 
         return HttpResponses.redirectToDot();
@@ -84,8 +85,11 @@ public class AjaxTerm {
     /**
      * If there's any existing session, destroy it.
      */
-    private void destroy() {
+    public HttpResponse doDestroy() {
         if (session!=null)
             session.getChildProcess().destroy();
+        session = null;
+
+        return HttpResponses.redirectToDot();
     }
 }
