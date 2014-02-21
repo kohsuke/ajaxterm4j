@@ -8,7 +8,7 @@ and a Java library that launches/manages processes. The library plays a similar 
 implemented in C and use X for rendering, ajaxterm4j is implemented in Java and uses Ajax/HTML for rendering.
 
 Usage
----
+-----
 
 Ajaxterm4j is defined in a JavaScript file and CSS. Include those in your page:
 
@@ -35,5 +35,13 @@ Basically,
 Refer to the javadoc of the `Session` class for more details.
 
 Demo application
----
+----------------
 The source tree contains a demo application that you can run with `mvn install; cd webapp; mvn jetty:run`
+
+SSH connector
+-------------
+This project comes with a module that uses `trilead-ssh` library to act as a SSH client and terminal.
+In this model, browser and the webapp acts as a terminal and a pure-Java SSH client, and it speaks
+the SSH protocol with a remote SSH server.
+
+See demo application for the details.
