@@ -69,6 +69,9 @@ public class PtyProcessBuilder {
         return this.environment;
     }
 
+    /**
+     * Uses Python helper code to handle tty. This is more portable but requires a separate python interpreter.
+     */
     public ProcessWithPty forkWithHelper() throws IOException {
         File py = File.createTempFile("ttycontrol", "py");
         InputStream in = PtyProcessBuilder.class.getResourceAsStream("ttycontrol.py");
@@ -161,6 +164,9 @@ public class PtyProcessBuilder {
         };
     }
 
+    /**
+     * Uses JNA to fork a process without external helper. Less portable but requires no Python.
+     */
     public ProcessWithPty fork() {
         if(commands.size()==0)
             throw new IllegalArgumentException("No command line arguments");
