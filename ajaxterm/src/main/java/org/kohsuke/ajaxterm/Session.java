@@ -104,19 +104,23 @@ public final class Session extends Thread {
         int len;
 
         try {
-            while((len=in.read(buf))>=0) {
-                terminal.write(new String(buf,0,len));
-                String reply = terminal.read();
-                if(reply!=null)
-                    out.write(reply);
+            try {
+                while((len=in.read(buf))>=0) {
+                    terminal.write(new String(buf,0,len));
+                    String reply = terminal.read();
+                    if(reply!=null)
+                        out.write(reply);
+                }
+            } catch (IOException e) {
+                // fd created by forkpty seems to cause I/O error when the other side is closed via kill -9
+                if (!hasChildProcessFinished())
+                    LOGGER.log(Level.WARNING, "Session pump thread is dead", e);
+            } finally {
+                closeQuietly(in);
+                closeQuietly(out);
             }
-        } catch (IOException e) {
-            // fd created by forkpty seems to cause I/O error when the other side is closed via kill -9
-            if (!hasChildProcessFinished())
-                LOGGER.log(Level.WARNING, "Session pump thread is dead", e);
-        } finally {
-            closeQuietly(in);
-            closeQuietly(out);
+        } catch (Throwable e) {
+            LOGGER.log(Level.WARNING, "Session pump thread is dead", e);
         }
     }
 
