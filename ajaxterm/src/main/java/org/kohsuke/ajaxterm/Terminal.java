@@ -405,6 +405,9 @@ public class Terminal {
         cl = false;
     }
 
+    /**
+     * args[0], otherwise defaults to 'defaultValue'
+     */
     private int defaultsTo(int[] args, int defaultValue) {
         return (args.length==0) ? defaultValue : args[0];
     }
@@ -448,15 +451,21 @@ public class Terminal {
         }
     }
 
+    /**
+     * Insert lines.
+     */
     public void csi_L(int[] args) {
-        for(int i=0;i<args[0];i++)
+        for(int i=0;i<defaultsTo(args,1);i++)
             if(cy<sb)
                 scrollDown(cy,sb);
     }
 
+    /**
+     * Delete lines.
+     */
     public void csi_M(int[] args) {
         if(cy>=st && cy<=sb)
-            for(int i=0;i<args[0];i++)
+            for(int i=0;i<defaultsTo(args,1);i++)
                 scrollUp(cy,sb);
     }
 
