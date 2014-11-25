@@ -130,7 +130,9 @@ public class Terminal {
 
     public void poke(int y, int x, String s) {
         // TODO: i18n
-        System.arraycopy(s.toCharArray(),0,scr,$(y,x),s.length());
+        char[] chars = s.toCharArray();
+        int destPos = $(y, x);
+        System.arraycopy(chars,0,scr, destPos, min(chars.length, scr.length - destPos));
     }
 
     public void poke(int y, String s) {
