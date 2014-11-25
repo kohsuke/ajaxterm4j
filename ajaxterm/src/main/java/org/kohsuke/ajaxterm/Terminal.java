@@ -644,7 +644,7 @@ public class Terminal {
             @Override
             void handle(Terminal t, int[] args) {
                 for( int i=0; i<args[0]; i++)
-                    t.scrollRight(t.cx,t.cy);
+                    t.scrollRight(t.cy,t.cx);
             }
         });
 
